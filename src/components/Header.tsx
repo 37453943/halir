@@ -211,14 +211,8 @@ export default function Header() {
                                     <div className="border-l border-gray-200 px-4 py-2">
                                         {user ? (
                                             <div className="flex items-center gap-3">
+                                                {/* Show username directly and link to account */}
                                                 <a href="/account" className="text-black hover:text-gray-600 transition text-sm">{user.name || 'Account'}</a>
-                                                <button onClick={async () => {
-                                                    try {
-                                                        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-                                                    } catch (e) { }
-                                                    setUser(null);
-                                                    window.location.href = '/';
-                                                }} className="text-xs text-gray-500 underline">Logout</button>
                                             </div>
                                         ) : (
                                             <a href="/login" className="text-black hover:text-gray-600 transition">

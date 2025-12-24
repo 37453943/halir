@@ -18,8 +18,9 @@ export function verifyToken(token: string) {
 }
 
 export function createAuthCookie(token: string) {
+    // Use a session cookie so it is cleared when the browser closes.
     const secure = env.NODE_ENV === 'production';
-    const parts = [`${COOKIE_NAME}=${encodeURIComponent(token)}`, `Path=/`, `HttpOnly`, `SameSite=Lax`, `Max-Age=${COOKIE_MAX_AGE}`];
+    const parts = [`${COOKIE_NAME}=${encodeURIComponent(token)}`, `Path=/`, `HttpOnly`, `SameSite=Lax`];
     if (secure) parts.push('Secure');
     return parts.join('; ');
 }

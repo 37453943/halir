@@ -10,3 +10,6 @@ export function reqLogger(reqId?: string) {
     return logger.child({ reqId });
 }
 
+// Default export for consumers that import `logger` as default
+export default logger;
+

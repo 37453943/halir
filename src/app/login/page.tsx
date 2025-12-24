@@ -153,4 +153,4 @@ export default function LoginPage() {
 
 // Tailwind helpers
 const input = "w-full px-4 py-2 border rounded-md";
-const btn = "w-full bg-btn text-white py-3  font-semibold";
+const btn = "w-full bg-btnn text-white py-3  font-semibold";

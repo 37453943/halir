@@ -7,10 +7,10 @@ import logger from '@/lib/clientLogger';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-function CheckoutButton() {
+function CheckoutButton({ onClose }: { onClose: () => void }) {
     const router = useRouter();
     return (
-        <button onClick={() => router.push('/checkout')} className="w-full bg-btn text-white px-5 py-5 font-bold">CHECKOUT</button>
+        <button onClick={() => { onClose(); router.push('/checkout'); }} className="w-full bg-btnn text-white px-5 py-5 font-bold">CHECKOUT</button>
     );
 }
 
@@ -144,58 +144,68 @@ export default function CartDrawer({ open, onClose }: Props) {
 
     const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
 
+    useEffect(() => {
+        if (!open) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [open, onClose]);
+
     if (!open) return null;
 
     return (
-        // Dropdown positioned relative to header container (wider panel)
-        <div ref={containerRef} className="absolute right-0 top-full w-[460px] z-50">
-            <div className="bg-[#F7F7F5] border-2 border-gray-300 ">
-                <div className="flex items-center justify-between mb-4 border-b-2 border-gray-300 p-4">
-                    <h3 className="text-lg font-bold uppercase">MY CART</h3>
-                    <div className="flex items-center gap-2">
+        <div className="fixed inset-0 z-40" onClick={onClose}>
+            <div className="absolute right-0 top-4 w-[460px] z-50" onClick={(e) => e.stopPropagation()} ref={containerRef}>
+                <div className="bg-[#F7F7F5] border-2 border-gray-300 ">
+                    <div className="flex items-center justify-between mb-4 border-b-2 border-gray-300 p-4">
+                        <h3 className="text-lg font-bold uppercase">MY CART</h3>
+                        <div className="flex items-center gap-2">
 
-                        <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">
-                            <X className="w-4 h-4" />
-                        </button>
+                            <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {items.length === 0 ? (
-                    <div className="text-center text-gray-500 mt-4 p-5">Your cart is empty.</div>
-                ) : (
-                    <div className="flex flex-col gap-3">
-                        {items.map(item => (
-                            <div key={item.id} className="flex items-start gap-3 border-b-2 border-gray-300 p-4">
-                                <Image src={item.image || '/images/placeholder.png'} alt={item.name || ''} width={96} height={96} className="w-24 h-24 object-cover rounded" />
+                    {items.length === 0 ? (
+                        <div className="text-center text-gray-500 mt-4 p-5">Your cart is empty.</div>
+                    ) : (
+                        <div className="flex flex-col gap-3">
+                            {items.map(item => (
+                                <div key={item.id} className="flex items-start gap-3 border-b-2 border-gray-300 p-4">
+                                    <Image src={item.image || '/images/placeholder.png'} alt={item.name || ''} width={96} height={96} className="w-24 h-24 object-cover rounded" />
 
-                                <div className="flex-1">
-                                    <div className="font-bold text-lg uppercase">{item.name}</div>
-                                    <div className="mt-2 text-sm text-gray-700">Price: <span className="font-semibold">{formatPrice(item.price)}</span></div>
-                                    <div className="mt-1 text-sm text-gray-700">Size: <span className="font-semibold">{item.size || item.variant || '—'}</span></div>
-                                    <div className="mt-1 flex text-sm text-gray-700 items-center">
-                                        Quantity:
-                                        <button type="button" onClick={(e) => { e.stopPropagation(); changeQty(item.id, -1); }} className="px-1 font-semibold">-</button>
-                                        <div className="px-2 font-semibold">{item.qty}</div>
-                                        <button type="button" onClick={(e) => { e.stopPropagation(); changeQty(item.id, 1); }} className="px-1 font-semibold">+</button>
+                                    <div className="flex-1">
+                                        <div className="font-bold text-lg uppercase">{item.name}</div>
+                                        <div className="mt-2 text-sm text-gray-700">Price: <span className="font-semibold">{formatPrice(item.price)}</span></div>
+                                        <div className="mt-1 text-sm text-gray-700">Size: <span className="font-semibold">{item.size || item.variant || '—'}</span></div>
+                                        <div className="mt-1 flex text-sm text-gray-700 items-center">
+                                            Quantity:
+                                            <button type="button" onClick={(e) => { e.stopPropagation(); changeQty(item.id, -1); }} className="px-1 font-semibold">-</button>
+                                            <div className="px-2 font-semibold">{item.qty}</div>
+                                            <button type="button" onClick={(e) => { e.stopPropagation(); changeQty(item.id, 1); }} className="px-1 font-semibold">+</button>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <button type="button" onClick={(e) => { e.stopPropagation(); removeItem(item.id); }} className="text-red-800 hover:text-red-1000 text-sm mt-1">Remove</button>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <button type="button" onClick={(e) => { e.stopPropagation(); removeItem(item.id); }} className="text-red-800 hover:text-red-1000 text-sm mt-1">Remove</button>
-                                </div>
+                            ))}
+
+                            <div className="  px-4 flex items-center justify-between">
+                                <div className="text-sm font-semibold">Sub-total:</div>
+                                <div className="text-sm font-bold">{formatPrice(subtotal)}</div>
                             </div>
-                        ))}
 
-                        <div className="  px-4 flex items-center justify-between">
-                            <div className="text-sm font-semibold">Sub-total:</div>
-                            <div className="text-sm font-bold">{formatPrice(subtotal)}</div>
+                            <div className="p-4 pb-8">
+                                {/* Use Next router push for navigation to avoid full page reload */}
+                                <CheckoutButton onClose={onClose} />
+                            </div>
                         </div>
-
-                        <div className="p-4 pb-8">
-                            {/* Use Next router push for navigation to avoid full page reload */}
-                            <CheckoutButton />
-                        </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

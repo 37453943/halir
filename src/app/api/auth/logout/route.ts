@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
-import { clearAuthCookie } from '@/lib/auth';
 
+// Logout endpoint disabled — sessions are session-scoped and will clear when browser closes.
 export async function POST() {
-    const res = NextResponse.json({ message: 'Logged out' }, { status: 200 });
-    res.headers.set('Set-Cookie', clearAuthCookie());
-    return res;
+    return NextResponse.json({ error: 'Not Found' }, { status: 404 });
 }
