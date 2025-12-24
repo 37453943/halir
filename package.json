@@ -6,22 +6,51 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write .",
+    "check": "tsc --noEmit",
+    "test": "vitest",
+    "test:ci": "vitest --run",
+    "prepare": "husky install"
   },
   "dependencies": {
-    "next": "16.0.5",
+    "@types/mongoose": "^5.11.97",
+    "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^0.556.0",
+    "mongoose": "^9.0.0",
+    "next": "^16.0.5",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "nodemailer": "^6.9.6",
+    "pino": "^8.9.0",
+    "zod": "^4.27.0",
+    "envalid": "^7.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
+    "@types/node": "^20.19.25",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.5",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.9.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
+    "vitest": "^1.4.0",
+    "@testing-library/react": "^14.0.0",
+    "supertest": "^6.3.3",
+    "mongodb-memory-server": "^8.13.0",
+    "@types/supertest": "^2.0.12"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx,json,css,md}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }

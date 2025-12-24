@@ -1,0 +1,14 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  vercel-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger Vercel Deploy (recommended: use Vercel Git Integration)
+        run: echo "This repository is setup for easy Vercel deployment. Use the Vercel Git integration or the Vercel CLI for manual deployments."
