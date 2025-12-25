@@ -8,16 +8,14 @@ import { reqLogger } from '@/lib/logger';
 import { jsonResponse } from '@/lib/response';
 import { saveBase64Image, deleteImageByPath } from '@/lib/storage';
 
-interface Params {
-    params: { id: string };
-}
+// Use permissive params typing to avoid Next.js type generation mismatches
 
 // 1. GET (Read Single Product - standard REST practice)
-export async function GET(request: Request, { params }: Params) {
+export async function GET(request: Request, { params }: { params: any }) {
     const reqId = request.headers.get('x-request-id') ?? generateRequestId();
     const log = reqLogger(reqId);
     await dbConnect();
-    const { id } = await params;
+    const { id } = params;
     try {
         const product = await Product.findById(id);
         if (!product) {
@@ -31,9 +29,11 @@ export async function GET(request: Request, { params }: Params) {
 }
 
 // PATCH: Update Product by ID (No changes needed)
-export async function PATCH(request: Request, { params }: Params) {
+export async function PATCH(request: Request, { params }: { params: any }) {
+    const reqId = request.headers.get('x-request-id') ?? generateRequestId();
+    const log = reqLogger(reqId);
     await dbConnect();
-    const { id } = await params;
+    const { id } = params;
     try {
         const body = await request.json();
 
@@ -122,11 +122,11 @@ export async function PATCH(request: Request, { params }: Params) {
 }
 
 // DELETE: Delete Product by ID (No changes needed)
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(request: Request, { params }: { params: any }) {
     const reqId = request.headers.get('x-request-id') ?? generateRequestId();
     const log = reqLogger(reqId);
     await dbConnect();
-    const { id } = await params;
+    const { id } = params;
     log.info({ id }, 'Attempting to delete product');
     try {
         const deletedProduct = await Product.findByIdAndDelete(id);

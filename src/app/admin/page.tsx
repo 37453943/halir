@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import logger from '@/lib/clientLogger';
 
 // ==========================================================
 // 1. TYPE DEFINITIONS & INITIAL DATA

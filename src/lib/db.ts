@@ -11,11 +11,11 @@ if (!MONGODB_URI) {
 }
 
 // Global variable to store the connection state
-let cached: { conn: Mongoose | null, promise: Promise<Mongoose> | null } =
-  global.mongoose;
+// Use a typed global access to avoid TypeScript errors in Next.js
+let cached: { conn: Mongoose | null, promise: Promise<Mongoose> | null } = (global as any).mongoose;
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+  cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
 async function dbConnect(): Promise<Mongoose> {

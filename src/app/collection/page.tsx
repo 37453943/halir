@@ -15,7 +15,8 @@ async function getCollections(): Promise<CollectionItem[]> {
     try {
         await dbConnect();
         const cols = await Collection.find({}).sort({ name: 1 }).lean();
-        return (cols || []) as CollectionItem[];
+        // Ensure _id is string for client-side rendering
+        return (cols || []).map((c: any) => ({ _id: String(c._id), name: c.name, slug: c.slug, imageUrl: (c && c.imageUrl) || undefined, images: (c && c.images) || [] })) as CollectionItem[];
     } catch (error) {
         // Server-side component: use structured logger
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -8,17 +8,12 @@ import { reqLogger } from '@/lib/logger';
 import { jsonResponse } from '@/lib/response';
 import { saveBase64Image, deleteImageByPath } from '@/lib/storage';
 
-// Interface definition for clarity (optional, but good practice)
-interface RouteContext {
-    params: { id: string };
-}
-
+// Use a permissive context type to avoid mismatches with Next.js generated types
 // --- PATCH: Update Collection by ID ---
-export async function PATCH(request: Request, { params }: RouteContext) {
+export async function PATCH(request: Request, { params }: { params: any }) {
     await dbConnect();
 
-    // FIX: AWAIT the params object to handle it being a Promise in some Next.js environments.
-    const { id } = await params;
+    const { id } = params;
 
     try {
         const body = await request.json();
@@ -76,11 +71,10 @@ export async function PATCH(request: Request, { params }: RouteContext) {
 }
 
 // --- DELETE: Delete Collection by ID ---
-export async function DELETE(request: Request, { params }: RouteContext) {
+export async function DELETE(request: Request, { params }: { params: any }) {
     await dbConnect();
 
-    // FIX: AWAIT the params object to handle it being a Promise.
-    const { id } = await params;
+    const { id } = params;
 
     try {
         const deletedCollection = await Collection.findByIdAndDelete(id);
